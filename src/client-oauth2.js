@@ -467,12 +467,6 @@ TokenFlow.prototype.getToken = function (uri, opts) {
   var url = typeof uri === 'object' ? uri : Url.parse(uri, true)
   var expectedUrl = Url.parse(options.redirectUri)
 
-  if (typeof url.pathname === 'string' && url.pathname !== expectedUrl.pathname) {
-    return Promise.reject(
-      new TypeError('Redirected path should match configured path, but got: ' + url.pathname)
-    )
-  }
-
   // If no query string or fragment exists, we won't be able to parse
   // any useful information from the uri.
   if (!url.hash && !url.search) {
@@ -581,16 +575,6 @@ CodeFlow.prototype.getToken = function (uri, opts) {
   expects(options, 'clientId', 'accessTokenUri')
 
   var url = typeof uri === 'object' ? uri : Url.parse(uri, true)
-
-  if (
-    typeof options.redirectUri === 'string' &&
-    typeof url.pathname === 'string' &&
-    url.pathname !== Url.parse(options.redirectUri).pathname
-  ) {
-    return Promise.reject(
-      new TypeError('Redirected path should match configured path, but got: ' + url.pathname)
-    )
-  }
 
   if (!url.query) {
     return Promise.reject(new TypeError('Unable to process uri: ' + uri))
